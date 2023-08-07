@@ -1,0 +1,10 @@
+<%- include("partials/header.ejs") %>
+
+<% if(match.length > 0) { %>
+    <% match.forEach((item, index) => { %>
+        <h1><%= item.title %></h1>
+        <p><%= item.content  %></p>
+   <% }) %>
+<% } %>
+
+<%- include("partials/footer.ejs") %>

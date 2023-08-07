@@ -1,0 +1,12 @@
+<%- include("partials/header.ejs") %>
+<% if(arr.length > 0) { %>
+    <% arr.forEach((item, index) => { %>
+        <h1><%= item.title %></h1>
+        <p>
+            <%= item.content.substring(0, 100) %>
+            <a href="/posts/<%= item.title.replace(" ", "").toLowerCase()  %>">read more...</a>
+        </p>
+   <% }) %>
+<% } %>
+
+<%- include("partials/footer.ejs") %>
