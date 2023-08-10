@@ -10,6 +10,8 @@ Technology stack:
  <li>Boostrap</li>
  <li>JS</li>
  <li>EJS</li>
+ <li>Mongoose</li>
+ <li>MongoDB</li>
  <li>NodeJS</li>
  <li>ExpressJS</li>
  <li>lodash</li>
