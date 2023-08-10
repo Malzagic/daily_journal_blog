@@ -18,7 +18,7 @@ const port = 8000;
 const password = process.env.MANGODB_PASSWORD;
 
 async function connectDB(req, res, next) {
-    const url = `mongodb+srv://malzagic:${password}@todolist.reaw3ux.mongodb.net/?retryWrites=true&w=majority`;
+    const url = `mongodb+srv://malzagic:${password}@todolist.reaw3ux.mongodb.net/daily-blog`;
 
 
     try {
@@ -52,7 +52,7 @@ app.get("/compose", (req, res) => {
     res.render("compose")
 });
 
-app.post("/compose", (req, res) => {
+app.post("/compose", async (req, res) => {
     const { title, author, userText } = req.body;
 
 
@@ -63,7 +63,7 @@ app.post("/compose", (req, res) => {
         date: Date,
     });
 
-    const Post = mongoose.model("Post", blogSchema);
+    const Post = mongoose.model("Post", blogSchema, "posts");
 
     const date = new Date();
     const day = date.getDate();
@@ -80,7 +80,7 @@ app.post("/compose", (req, res) => {
 
     arr.push(newPost);
 
-    Post.insertMany(newPost)
+    await newPost.save();
 
     res.redirect("/");
 });
