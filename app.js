@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import alert from "alert";
 import ejs from "ejs";
 import _ from "lodash";
 import 'dotenv/config'
@@ -11,11 +12,17 @@ const text2 = { title: "text2", content: "There are many variations of passages 
 
 const text3 = { title: "text3", content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." };
 
-const arr = [text1];
 const { Schema } = mongoose;
 const app = express();
 const port = 8000;
 const password = process.env.MANGODB_PASSWORD;
+
+const blogSchema = new Schema({
+    title: String,
+    author: String,
+    content: String,
+    date: Date,
+});
 
 async function connectDB(req, res, next) {
     const url = `mongodb+srv://malzagic:${password}@todolist.reaw3ux.mongodb.net/daily-blog`;
@@ -36,8 +43,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(connectDB);
 
-app.get("/", (req, res) => {
-    res.render("home", { arr: arr })
+app.get("/", async (req, res) => {
+    let data = [];
+
+    const Post = mongoose.model("Post", blogSchema, "posts");
+
+    data = await Post.find();
+
+    res.render("home", { arr: data })
 });
 
 app.get("/about", (req, res) => {
@@ -56,13 +69,6 @@ app.post("/compose", async (req, res) => {
     const { title, author, userText } = req.body;
 
 
-    const blogSchema = new Schema({
-        title: String, // String is shorthand for {type: String}
-        author: String,
-        content: String,
-        date: Date,
-    });
-
     const Post = mongoose.model("Post", blogSchema, "posts");
 
     const date = new Date();
@@ -75,28 +81,35 @@ app.post("/compose", async (req, res) => {
         title: title,
         author: author,
         content: userText,
-        date: today
+        date: date
     })
-
-    arr.push(newPost);
 
     await newPost.save();
 
     res.redirect("/");
 });
 
-app.get("/posts/:post", (req, res) => {
-    let postReplaceSpace = _.replace(req.params.post, "-", "");
-    let postToLowerCase = _.toLower(postReplaceSpace);
+app.get("/posts/:post", async (req, res) => {
 
-    const match = arr.filter(item => item.title.replace(" ", "").toLowerCase() === postToLowerCase);
+    const Post = mongoose.model("Post", blogSchema, "posts");
 
+    const result = await Post.findOne({title: req.params.post});
 
-    if (match.length > 0) {
-        res.render("post", { match: match })
+    if(result !== null) {
+        res.render("post", { result: result })
     }
 });
 
+app.get("/delete/:post", async (req, res) => {
+    const Post = mongoose.model("Post", blogSchema, "posts");
+
+    const result = await Post.findOneAndDelete({title: req.params.post});
+
+    if(result !== null) {
+        alert("Successfuly deleted post!");
+        res.redirect("/");
+    }
+})
 
 
 app.listen(port, () => {
