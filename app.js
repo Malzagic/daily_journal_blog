@@ -27,10 +27,10 @@ const text3 = {
 const { Schema } = mongoose;
 const app = express();
 const port = 8000;
-const userDB = process.env.MANGODB_USER;
-const password = process.env.MANGODB_PASSWORD;
-const nameDB = process.env.MANGODB_NAME;
-const collectionDB = process.env.MANGODB_COLLECTION;
+const userDB = process.env.MONGODB_USER;
+const password = process.env.MONGODB_PASSWORD;
+const nameDB = process.env.MONGODB_NAME;
+const collectionDB = process.env.MONGODB_COLLECTION;
 
 const blogSchema = new Schema({
   title: String,
