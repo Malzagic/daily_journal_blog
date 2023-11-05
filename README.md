@@ -1,6 +1,6 @@
 #Daily_Journal
 
-Project of simple blog page create with NodeJS/ExpressJS to simulate reale blog pages.
+Project of simple blog page create with NodeJS/ExpressJS to simulate real blog pages.
 
 
 Technology stack:
